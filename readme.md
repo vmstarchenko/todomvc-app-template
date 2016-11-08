@@ -20,5 +20,5 @@
 
 ## Usage (build js)
 
-npm run build-js (just build js file)
-npm run watch-js (start watching your js file)
+`npm run build-js` (just build js file)
+`npm run watch-js` (start watching your js file)
