@@ -1,10 +1,23 @@
 {
   "private": true,
+
+  "TemplatesStorage": "libs/TemplatesStorage.js",
+
   "dependencies": {
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.0",
     "watchify": "^3.7.0",
-    "browserify": "^13.1.1"
+    "browserify": "^13.1.1",
+
+    "babel-core": "^6.0.20",
+    "babel-polyfill": "^6.0.16",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-stage-0": "^6.0.15",
+    "babel-cli": "^6.0.0",
+    "babel-runtime": "latest",
+
+    "webpack": "latest"
+
   },
 
   "scripts": {

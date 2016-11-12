@@ -1,7 +1,11 @@
-(function (window) {
-	'use strict';
+import { TemplatesStorage } from "./libs/TemplatesStorage.js";
 
-	// Your starting point. Enjoy the ride!
-	// Write npm run watch-js to start coding
+(function(window) {
+  'use strict';
+
+  // Write npm run watch-js to start coding
+  let storage = new TemplatesStorage();
+  console.log(storage);
+  console.log(NODE_ENV == 'development');
 
 })(window);
