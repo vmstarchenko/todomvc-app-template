@@ -2,6 +2,7 @@
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
   entry: "./js/app.js",
@@ -36,5 +37,17 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+
+  resolve: {
+    root: [
+      path.resolve('./js'),
+      path.resolve('./js/libs'),
+      // path.resolve('./js/templates'),
+      // path.resolve('./js/views'),
+      // path.resolve('./js/models'),
+      // path.resolve('./js/controllers'),
+      path.resolve('./node_modules')
+    ]
+  },
 };
