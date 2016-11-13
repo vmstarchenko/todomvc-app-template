@@ -4,8 +4,6 @@
   "dependencies": {
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.0",
-    "watchify": "^3.7.0",
-    "browserify": "^13.1.1",
 
     "babel-core": "^6.0.20",
     "babel-polyfill": "^6.0.16",
@@ -16,10 +14,5 @@
 
     "webpack": "latest"
 
-  },
-
-  "scripts": {
-    "build-js": "browserify js/app.js > js/result.js",
-    "watch-js": "watchify js/app.js -o js/result.js"
   }
 }

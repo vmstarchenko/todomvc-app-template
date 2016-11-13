@@ -9,8 +9,6 @@ import { TodoList } from "views/TodoList";
   let todoListView = new TodoList();
   console.log(todoListView);
 
-  // Write npm run watch-js to start coding
-
   // let emitter = new EventEmitter();
   // let listener1 = () => {console.log('1');};
   // let listener2 = () => {
