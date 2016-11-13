@@ -39,8 +39,39 @@ export default class EventEmitter {
   }
 
   /**
-   * Removes the specified listener from the listener array for the event
+   *   Removes all listeners, or those of the specified eventName.
+   *   Note that it is bad practice to remove listeners added elsewhere in
+   * the code, particularly when the EventEmitter instance was created by
+   * some other component or module (e.g. sockets or file streams).
+   *
+   * @param{String|Symbol} eventName - The name of the event.
+   *
+   * @returns{EventEmitter} reference to the EventEmitter, so that
+   *   calls can be chained.
+   */
+  removeAllListeners(eventName) {
+    if (this._isEmmiting) {
+      this._taskQueue.push(this.remoteAllListeners.bind(this, eventName));
+      return this;
+    }
+
+    if (this.listeners[eventName])
+      this.listeners[eventName] = [];
+    return this;
+  }
+
+  /**
+   *   Removes the specified listener from the listener array for the event
    * named eventName.
+   *   removeListener will remove, at most, one instance of a listener from the
+   * listener array. If any single listener has been added multiple times to
+   * the listener array for the specified eventName, then removeListener
+   * must be called multiple times to remove each instance.
+   *   Note that once an event has been emitted, all listeners attached to it at
+   * the time of emitting will be called in order. This implies that any
+   * removeListener() or removeAllListeners() calls after emitting and before
+   * the last listener finishes execution will not remove them from emit() in
+   * progress. Subsequent events will behave as expected.
    *
    * @param{String|Symbol} eventName - The name of the event.
    * @param{Function} listener - The callback function
@@ -56,35 +87,32 @@ export default class EventEmitter {
    *   server.removeListener('connection', callback);
    *   server.on('connection', callback);  //
    *
-   * removeListener will remove, at most, one instance of a listener from the listener array. If any single listener has been added multiple times to the listener array for the specified eventName, then removeListener must be called multiple times to remove each instance.
-   *
-   *   Note that once an event has been emitted, all listeners attached to it at
-   * the time of emitting will be called in order. This implies that any
-   * removeListener() or removeAllListeners() calls after emitting and before
-   * the last listener finishes execution will not remove them from emit() in
-   * progress. Subsequent events will behave as expected.
    */
   removeListener(eventName, listener) {
     if (this._isEmmiting) {
       this._taskQueue.push(this.remoteListener.bind(this, eventName, listener));
       return this;
     }
+
     if (this.listeners[eventName]) {
       let listeners = this.listeners[eventName];
-
-      for (let i=0, size=listeners.length; i < size; ++i) {
-        if (listeners[i] === listener) {
-          listeners.pop(i);
-          break;
-        }
-      }
-
-      if (!this.listeners[eventName])
-        this.listeners[eventName] = undefined;
+      let index = listeners.indexOf(listener);
+      if (index > -1)
+        listeners.splice(index, 1);
     }
     return this;
   }
 
+  /**
+   *   Synchronously calls each of the listeners registered for the event
+   * named eventName, in the order they were registered, passing the supplied
+   * arguments to each.
+   *
+   * @param{String|Symbol} eventName - The name of the event.
+   * @param{*} args - arguments that passed to listeners
+   *
+   * @returns Returns true if the event had listeners, false otherwise.
+   */
   emit(eventName, ...args) {
     this.isEmmiting = true;
     if (this.listeners[eventName]) {
@@ -97,6 +125,7 @@ export default class EventEmitter {
     return false;
   }
 
+  // Aux. Call all functions from taskQueue
   _resolveTaskQueue() {
     let func;
     while (this._taskQueue) {
@@ -115,7 +144,7 @@ export default class EventEmitter {
 //     EventEmitter.listenerCount(emitter, eventName)
 //     EventEmitter.defaultMaxListeners
 // +    emitter.addListener(eventName, listener)
-//     emitter.emit(eventName[, ...args])
+// +    emitter.emit(eventName[, ...args])
 //     emitter.eventNames()
 //     emitter.getMaxListeners()
 //     emitter.listenerCount(eventName)
@@ -124,7 +153,10 @@ export default class EventEmitter {
 //     emitter.once(eventName, listener)
 //     emitter.prependListener(eventName, listener)
 //     emitter.prependOnceListener(eventName, listener)
-//     emitter.removeAllListeners([eventName])
-//     emitter.removeListener(eventName, listener)
+// +    emitter.removeAllListeners([eventName])
+// +    emitter.removeListener(eventName, listener)
 //     emitter.setMaxListeners(n)
 
+export {
+  EventEmitter
+};

@@ -1,7 +1,7 @@
 /*************** TemplatesStorage ***************/
 
 /**
- *   Store templates
+ *   Store templates.
  *
  * @class TemplatesStorage
  *
@@ -70,12 +70,12 @@ class TemplatesStorage {
  * Tip: always set default value for context
  *
  *****************************************/
-let guestTemplates = new TemplatesStorage( // Test
-  {username: 'testuser'},
-  {test: c => {return `<div>Hi ${c.username}. Are you ${c.age}?</div>`;}}
-);
+// let guestTemplates = new TemplatesStorage( // Test
+//   {username: 'testuser'},
+//   {test: c => {return `<div>Hi ${c.username}. Are you ${c.age}?</div>`;}}
+// );
 
 export {
-  TemplatesStorage,
-  guestTemplates
+  TemplatesStorage
+  // guestTemplates
 };
