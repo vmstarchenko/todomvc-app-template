@@ -16,7 +16,7 @@ class TemplatesStorage {
   }
 
   render(templateName, context) {
-    context = Object.assign({}, context, this.defaultContext);
+    context = Object.assign({}, this.defaultContext, context);
     return this.storage[templateName](context);
   }
 
@@ -35,7 +35,12 @@ class TemplatesStorage {
  *****************************************/
 
 function template_Test(c={username: undefined}) {
-  return `hello. it's a simple test. context: ${c}, ${c.username}`;
+  let html = `\
+<div>
+  hello. it's a simple test. context: ${c}, ${c.username}
+</div>\
+`;
+  return html;
 }
 
 /*************** Storages ***************/
