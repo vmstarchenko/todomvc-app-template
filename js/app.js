@@ -12,6 +12,7 @@ import { M } from './.tmp/a.js';
   let a = new M({n: 5, s: 3});
   console.log('fields', typeof a);
   console.log(a);
+  let b = M.getById(0);
 
   // console.log('check path resolver');
   // let todoListView = new TodoList();

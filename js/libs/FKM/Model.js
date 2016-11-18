@@ -6,10 +6,11 @@ class ModelCache extends Object {
   constructor() { super(); }
 }
 
-let cacheS = Symbol('Cache');
-let fieldsS = Symbol('Fields');
-let lastUsedId = Symbol('Last used id for generating unique ids');
-let id = Symbol('Object identifier');
+let cacheS = Symbol('Cache'),
+    lastUsedIdS = Symbol('Last used id for generating unique ids'),
+    fieldsS = Symbol('Fields'),
+    verboseNameS = Symbol('Model verbose class name'),
+    idS = Symbol('Object identifier');
 
 class Model extends EventEmitter {
   static get _fields() {
@@ -21,7 +22,7 @@ class Model extends EventEmitter {
   constructor(fields) {
     super();
     this.setAll(fields);
-    Object.defineProperty(this, id, {
+    Object.defineProperty(this, idS, {
       configurable: false,
       enumerable: false,
       writable: false,
@@ -35,15 +36,17 @@ class Model extends EventEmitter {
   static register(model, verboseName) {
     let errorMsg = "ValueError: can't register model";
 
-    model.prototype[fieldsS] = {};
-    model.constructor[lastUsedId] = -1;
-    model.generateId();
-
     // TODO: check that model is instance of Model
     if (typeof verboseName !== 'string')
       throw new Error(
           errorMsg +
           `, verboseName not valid (got ${typeof verboseName} expected string)`);
+
+
+    model.prototype[fieldsS] = {};
+    model.constructor[lastUsedIdS] = 0;
+    model.generateId();
+    model[verboseNameS] = verboseName;
 
     for (let field in model._fields) {
       if (typeof model._fields[field] !==
@@ -76,19 +79,38 @@ class Model extends EventEmitter {
   }
 
   commit() {
-    // TODO: check cacheS
-    // TODO: save in storage
+    // TODO: check cache
+    let cls = this.constructor;
+    let storageId = `#${cls.name}#${this[idS]}`;
+    let obj = Object.assign({}, this[fieldsS]);
+
+    this._storage[storageId] = JSON.stringify(obj);
+
+    return this;
   }
 
   static generateId() {
     let cls = this.constructor;
-    let idPattern = `#${cls.name}#`;
+    let idPattern = `#${this[verboseNameS]}#`;
     let storage = this.prototype._storage;
-    let id_ = cls[lastUsedId];
-    for (; storage.hasOwnProperty(idPattern + id_); ++id_) {
+    let id = cls[lastUsedIdS];
+
+    for (; storage.hasOwnProperty(idPattern + id); ++id) {
     }
-    cls[lastUsedId] = id_ + 1;
-    return id_;
+    cls[lastUsedIdS] = id;
+
+    return id;
+  }
+
+  static getById(id) {
+    // TODO: search in cache
+    let storageId = `#${this[verboseNameS]}#${id}`;
+    let storage = this.prototype._storage;
+
+    let obj = JSON.parse(storage[storageId]);
+    if (obj === undefined) return undefined;
+
+    return new this(obj);
   }
 }
 
