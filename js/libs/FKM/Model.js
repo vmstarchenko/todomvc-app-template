@@ -12,14 +12,14 @@ class ModelCache extends Object {
   constructor() { super(); }
 }
 
-function Model(fields) {
+function Model(fields, id) {
   // TODO: add check if call without new
   this.setAll(fields);
   Object.defineProperty(this, 'id', {
     configurable: false,
     enumerable: true,
     writable: false,
-    value: this.constructor.generateId()
+    value: id !== undefined ? Number(id) : this.constructor.generateId()
   });
 }
 
@@ -147,7 +147,7 @@ Model.getById = function(id) {
   let obj = JSON.parse(storage[storageId]);
   if (obj === undefined) return undefined;
 
-  return new this(obj);
+  return new this(obj, id);
 };
 
 Model.prototype.toString = function() {
