@@ -1,5 +1,5 @@
 import { LocalStorage } from "libs/LocalStorage";
-import { EventEmitter } from "libs/EventEmitter";
+import { EventEmitter } from "libs/FKM/EventEmitter";
 import { TodoList } from "views/TodoList";
 
 import { Model } from "FKM/Model.js";

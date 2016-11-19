@@ -1,4 +1,4 @@
-import {EventEmitter} from './EventEmitter.js';
+import {EventEmitter, wrapModelByEmitter} from './EventEmitter.js';
 
 let cacheS = Symbol('Cache'),
     lastUsedIdS = Symbol('Last used id for generating unique ids'),
@@ -24,7 +24,12 @@ function Model(fields) {
   });
 }
 
-Model.prototype = Object.create(EventEmitter.prototype);
+// inheritance
+// Model.prototype = Object.create(EventEmitter.prototype);
+// Object.assign(Model, Object.create(EventEmitter.prototype));
+// console.dir(Model); //, Object.create(EventEmitter.prototype));
+
+Model[cacheS] = new ModelCache();
 
 Model._fields = function _fields() {  // TODO: to getter
   throw Error('Abstract property: redefine property in children models');
@@ -50,11 +55,12 @@ Model.register = function(model, verboseName) {
         errorMsg +
         `, verboseName not valid (got ${typeof verboseName} expected string)`);
 
-
   model.prototype[fieldsS] = {};
   model.constructor[lastUsedIdS] = 0;
   model.generateId();
   model[verboseNameS] = verboseName;
+
+  wrapModelByEmitter(model);
 
   for (let field in model._fields) {
     if (typeof model._fields[field] !==
@@ -115,7 +121,6 @@ Model.getById = function(id) {
   let storageId = `#${this[verboseNameS]}#${id}`;
   let storage = this.prototype._storage;
 
-  console.log(storageId, storage);
   let obj = JSON.parse(storage[storageId]);
   if (obj === undefined) return undefined;
 
@@ -125,7 +130,5 @@ Model.getById = function(id) {
 Model.prototype.toString = function() {
   return JSON.stringify(JSON.stringify(this[fieldsS]));
 };
-
-Model[cacheS] = new ModelCache();
 
 export {Model};
