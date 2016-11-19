@@ -146,6 +146,7 @@ EventEmitter.prototype._resolveTaskQueue = function() {
  */
 function wrapModelByEmitter(model) {
   let modelConstructor = model.constructor, emitter = new EventEmitter(), props;
+
   props = [].concat(
       Object.getOwnPropertyNames(EventEmitter.prototype),
       Object.getOwnPropertySymbols(EventEmitter.prototype));
