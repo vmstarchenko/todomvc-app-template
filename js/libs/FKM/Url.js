@@ -1,8 +1,7 @@
-
 let searchS = Symbol('search');
 
 /**
- * Attributes:
+ * Url location attributes:
  *   hash:                   "#test"
  *   host (host and port):   "www.google.com:80"
  *   href (full url):        "http://www.google.com:80/search?q=javascript#test"
@@ -47,7 +46,12 @@ class Url {
     }
     return '?' + args.join('&');
   }
-
+  /**
+   *   Check if object is equal with this url.
+   * Check attributes passed in object.
+   *
+   * @param{Object} object - keys are valid url location attributes.
+   */
   equal(object) {
     let pathname = object.pathname;  // pathname
     if (pathname) {
@@ -73,6 +77,9 @@ class Url {
   }
 }
 
+/**
+ * @returns{Object}
+ */
 function parseSearch(search) {
   let parsed = search;
   if (search instanceof String) {

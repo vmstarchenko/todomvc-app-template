@@ -9,15 +9,20 @@ let configS = Symbol('Config');
  *    url: Regexp|String,    // Unique value. Required argument
  *    preloader: Function,   // Check if need to load and render main
  *                           //   template for page
- *    controller: Controller // Bind views and models. Required argument.
+ *    controller: Function // Bind views and models. Required argument.
  * }, ...]
  *
- *   Listen global historyAPI events
+ * Listen global historyAPI events:
+ *   "popstate" - call Router.onpopstate
  *
- *   If preloader return true call controller function
+ * If preloader return true call controller function
+ *
+ * @param{Object[]} config - url config valid objects
+ * @param{Router[]} source - parent routers define base config
  */
-function Router(config = [], sources = [], prefix = '') {
+function Router(config = [], sources = []) {
   // TODO: add check if call constructor with new
+  // TODO: add urls from sources
   if (sources) {
     sources.forEach(function(element) {  // check if sources are Routers
       if (!(element instanceof Router))
@@ -32,8 +37,6 @@ function Router(config = [], sources = [], prefix = '') {
     throw new Error('ValueError: config is not an Array');
   }
 
-  // TODO: add urls from sources
-
   // bind event listeners
   window.addEventListener('popstate', this.onpopstate.bind(this));
 }
@@ -43,13 +46,13 @@ function Router(config = [], sources = [], prefix = '') {
  *   Add one url to router config
  */
 Router.prototype.addUrl = function(
-    {url, preloader = defaultPreloader, controller}) {
+  {url, preloader = defaultPreloader, controller}) {
   if (url === undefined ||  // check if config is valid
       !(preloader instanceof Function) || !(controller instanceof Function)) {
     throw new Error('not valid router config');
   }
   this[configS].push(
-      {url: RegExp(url), preloader: preloader, controller: controller});
+    {url: RegExp(url), preloader: preloader, controller: controller});
   return this;
 };
 
