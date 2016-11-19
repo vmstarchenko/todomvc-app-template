@@ -13,6 +13,7 @@ import { M } from './.tmp/a.js';
   console.log('fields', typeof a);
   console.log(a);
   let b = M.getById(0);
+  console.log(b.emit, M.emit);
 
   // console.log('check path resolver');
   // let todoListView = new TodoList();
