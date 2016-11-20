@@ -35,8 +35,8 @@ Model._fields = function _fields() {  // TODO: to getter
 };
 
 Object.defineProperty(
-  Model.prototype, '_storage',
-  {get: function _storage() { return window.localStorage; }});
+    Model.prototype, '_storage',
+    {get: function _storage() { return window.localStorage; }});
 
 /**
  *   Register model - prepare model for using. Create getters/setter for
@@ -51,7 +51,7 @@ Model.register = function(model, verboseName) {
   // TODO: check that model is instance of Model
   if (typeof verboseName !== 'string')
     throw new Error(
-      errorMsg +
+        errorMsg +
         `, verboseName not valid (got ${typeof verboseName} expected string)`);
 
   model.prototype[fieldsS] = {};
@@ -65,7 +65,7 @@ Model.register = function(model, verboseName) {
     if (typeof model._fields[field] !==
         'function')  // check if value is function
       throw new Error(
-        `ValueError: can't register model "${verboseName}". ` +
+          `ValueError: can't register model "${verboseName}". ` +
           `Field "${field}" is not a constructor`);
 
     // TODO: check if redefine attributes
@@ -89,11 +89,12 @@ Model.register = function(model, verboseName) {
  * @param{Object} fields - dictionary of fields in format {key: value}
  */
 Model.prototype.setAll = function(fields) {
-  let _fields = this.constructor._fields;
-
+  let _fields = this.constructor._fields, fieldValue;
   // TODO: call change event
   for (let field in fields) {
-    this[fieldsS][field] = _fields[field](fields[field]);  // cast values
+    fieldValue = _fields[field];
+    if (fieldValue !== undefined)
+      this[fieldsS][field] = fieldValue(fields[field]);  // cast values
   }
 };
 
@@ -154,4 +155,4 @@ Model.prototype.toString = function() {
   return JSON.stringify(JSON.stringify(this[fieldsS]));
 };
 
-export {Model};
+export {Model, fieldsS};
