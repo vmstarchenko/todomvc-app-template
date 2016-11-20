@@ -1,12 +1,14 @@
 // TODO: work with full location
 
+import {Url} from './Url';
+import {Controller} from './Controller';
 
 let configS = Symbol('Config');
 /**
  *   Raise error if urlConfig has not valid format.
  *   Config format:
  * [{
- *    url: Regexp|String,    // Unique value. Required argument
+ *    url: Url|Object,    // Unique value. Required argument
  *    preloader: Function,   // Check if need to load and render main
  *                           //   template for page
  *    controller: Function // Bind views and models. Required argument.
@@ -17,7 +19,7 @@ let configS = Symbol('Config');
  *
  * If preloader return true call controller function
  *
- * @param{Object[]} config - url config valid objects
+ * @param{Url[]} config - url config valid objects
  * @param{Router[]} source - parent routers define base config
  */
 function Router(config = [], sources = []) {
@@ -46,13 +48,17 @@ function Router(config = [], sources = []) {
  *   Add one url to router config
  */
 Router.prototype.addUrl = function(
-  {url, preloader = defaultPreloader, controller}) {
-  if (url === undefined ||  // check if config is valid
-      !(preloader instanceof Function) || !(controller instanceof Function)) {
+    {url, preloader = defaultPreloader, controller}) {
+  if (!(url instanceof Object) ||  // check if config is valid
+      !(preloader instanceof Function) || !(controller instanceof Controller)) {
     throw new Error('not valid router config');
   }
-  this[configS].push(
-    {url: RegExp(url), preloader: preloader, controller: controller});
+  if (!(url instanceof Url)) {
+    url = new Url(url);
+  }
+
+  this[configS].push({url: url, preloader: preloader, controller: controller});
+
   return this;
 };
 
@@ -61,38 +67,35 @@ Router.prototype.addUrl = function(
  *   Add all urls from config list to router config
  */
 Router.prototype.addUrls = function(config) {
-  config.forEach(function(element) {  // check if config is valid
-    if (element.preloader === undefined) element.preloader = defaultPreloader;
-    if (element.url === undefined || !(element.preloader instanceof Function) ||
-        !(element.controller instanceof Function)) {
-      throw new Error('ValueError: not valid router config');
-    }
-  });
   for (let i = 0, size = config.length; i < size; ++i) {
-  }
-
-  for (let i = 0, size = config.length; i < size; ++i) {
-    config[i].url = RegExp(config[i].url);
-    this[configS].push(config[i]);
+    this.addUrl(config[i]);
   }
 };
 
 
 Router.prototype.onpopstate = function(event) {
-  let location = window.location;
-  let pathname = location.pathname,
-      search = location.search,  // TODO: work with search
-      hash = location.hash;      // TODO: work with hash
+  console.log('start pop state');
+  this.navigate({
+    pathname: window.location.pathname,
+    hash: window.location.hash,
+    search: window.location.search
+  });
+};
+
+
+// object with url location attributes as keys
+Router.prototype.navigate = function(url) {
   let config = this[configS];
+
   for (let i = 0, size = config.length; i < size; ++i) {
-    if (pathname.search(config[i].url) !== -1) {
-      let code = config[i].preloader(pathname, search, hash);
-      if (code === true) config[i].controller(pathname, search, hash);
+    if (config[i].url.equal(url)) {
+      let code = config[i].preloader(url);
+      if (code === true) config[i].controller.activate(url);
       return;
     }
   }
-};
 
+};
 
 function defaultPreloader() {
   return true;

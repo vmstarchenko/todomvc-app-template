@@ -1,25 +1,27 @@
-import { LocalStorage } from "libs/LocalStorage";
-import { EventEmitter } from "libs/FKM/EventEmitter";
-import { TodoList } from "views/TodoList";
-import { Router } from "FKM";
+import {EventEmitter} from "libs/FKM/EventEmitter";
+import {TodoList} from "views/TodoList";
+import {Router} from "FKM";
 
-import { Model } from "FKM/Model.js";
-import { M } from './.tmp/a.js';
+import {Model} from "FKM/Model.js";
+import {M} from './.tmp/a.js';
+import {router, pathnamePrefix} from 'appRouter';
 // import { b } from './.tmp/b.js';
 
 (function(window) {
   'use strict';
 
-  let a = new M({n: 5, s: 3});
-  // console.log('fields', typeof a);
-  // console.log(a);
-  let b = M.getById(0);
-  // console.log(b.emit, M.emit);
+  router.navigate({pathname: pathnamePrefix + '/index.html'});
 
-  let r1 = new Router([{
-    url: '/home/vladimir/xProgramming/hse-js/todomvc-app-template/index.html',
-    controller: function() { console.log('route'); }
-  }]);
+  // let a = new M({n: 5, s: 3});
+  // // console.log('fields', typeof a);
+  // // console.log(a);
+  // let b = M.getById(0);
+  // // console.log(b.emit, M.emit);
+
+  // let r1 = new Router([{
+  //   url: '/home/vladimir/xProgramming/hse-js/todomvc-app-template/index.html',
+  //   controller: function() { console.log('route'); }
+  // }]);
 
   // console.log('check path resolver');
   // let todoListView = new TodoList();
