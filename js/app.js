@@ -12,6 +12,11 @@ import {router, pathnamePrefix} from 'appRouter';
 
   router.navigate({pathname: pathnamePrefix + '/index.html'});
 
+  // let a = function() { console.log(1); };
+  // let b = function() { console.log(2); };
+  // window.addEventListener('popstate', a);
+  // window.document.querySelector('a[href="#/completed"]').onclick = b;
+
   // let a = new M({n: 5, s: 3});
   // // console.log('fields', typeof a);
   // // console.log(a);

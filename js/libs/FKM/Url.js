@@ -23,17 +23,17 @@ class Url {
    */
   constructor(
       {protocol = "http:", hostname = "example.com", port = "", pathname = "/",
-       search = "", hash = ""}) {
+       search = "", hash = "#/"}) { // TODO: fix hash replace("#/", '')
     this.protocol = protocol;
     this.hostname = hostname;
     this.port = port;
     this.pathname = new RegExp(pathname);  // TODO: pathname is required
-    this.searchObject = parseSearch(search);
+    this[searchS] = parseSearch(search);
     this.hash = hash;
   }
 
   get href() {
-    return `${this.protocol}//${this.host}${this.pathname}${this.searchObject}${this.hash}`;
+    return `${this.protocol}//${this.host}${this.pathname}${this.search}${this.hash}`;
   }
   get host() {
     return this.port ? this.hostname + ':' + this.port : this.hostname;
@@ -66,7 +66,7 @@ class Url {
     if (object.search !== undefined) {  // search
       let search = parseSearch(object.search);
       for (let key in search) {
-        if (search[key] !== this.searchObject[key]) return false;
+        if (search[key] !== this[searchS][key]) return false;
       }
       delete object.search;
     }
@@ -78,6 +78,20 @@ class Url {
     return true;
   }
 }
+
+/**
+* Copy undefined parameters from source
+ * @param{Url} url - base url
+ */
+Url.extend = function(url, urlConfig = {}) {
+  if (urlConfig.protocol === undefined) urlConfig.protocol = url.protocol;
+  if (urlConfig.hostname === undefined) urlConfig.hostname = url.hostname;
+  if (urlConfig.port === undefined) urlConfig.port = url.port;
+  if (urlConfig.pathname === undefined) urlConfig.pathname = url.pathname;
+  if (urlConfig.search === undefined) urlConfig.search = url.search;
+  if (urlConfig.hash === undefined) urlConfig.hash = url.hash;
+  return new Url(urlConfig);
+};
 
 /**
  * @returns{Object}
