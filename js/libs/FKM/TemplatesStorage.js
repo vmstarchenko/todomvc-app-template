@@ -21,7 +21,7 @@ class TemplatesStorage {
    *   of rendered templates.
    * @param{Object}[templates={}] - keys: templateName, value: Function renderer
    */
-  constructor(defaultContext={}, templates={}) {
+  constructor(templates={}, defaultContext={}) {
     // debugger;
     this.defaultContext = defaultContext;
     this.storage = templates;

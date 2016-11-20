@@ -1,4 +1,5 @@
 import {View} from 'FKM';
+import {TodoView} from 'TodoView';
 
 class TodoListView extends View {
   constructor(rootElement) {
@@ -14,11 +15,23 @@ class TodoListView extends View {
       buttonToggleAll: '.toggle-all'
     });
 
-    this.bindEvents([
-      {event: 'click', element: this.ui.inputField, handler: () => {}}
-    ]);
+    this.bindEvents([{
+      event: 'keypress',
+      element: this.ui.inputField,
+      handler: this.createNewTodo
+    }]);
 
     console.log(this.ui);
+  }
+
+  createNewTodo(event) {
+    if (event.key !== 'Enter') return;
+
+    let value = this.ui.inputField.value.trim();
+    if (!value) return;
+    
+    console.log('add new todo:', value);
+    TodoView.create({title: value});
   }
 }
 

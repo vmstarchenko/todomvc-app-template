@@ -1,5 +1,4 @@
 import {EventEmitter} from "libs/FKM/EventEmitter";
-import {TodoList} from "views/TodoList";
 import {Router} from "FKM";
 import {TodoListModel} from 'TodoListModel';
 
