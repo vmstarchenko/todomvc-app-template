@@ -17,6 +17,6 @@ class TodoListModel extends Model {
   }
 }
 
-Model.register(TodoListModel, "TodoListModel");
+Model.register(TodoListModel, "TodoList");
 
 export {TodoListModel};

@@ -1,6 +1,7 @@
 import {EventEmitter} from "libs/FKM/EventEmitter";
 import {TodoList} from "views/TodoList";
 import {Router} from "FKM";
+import {TodoListModel} from 'TodoListModel';
 
 import {Model} from "FKM/Model.js";
 import {M} from './.tmp/a.js';
