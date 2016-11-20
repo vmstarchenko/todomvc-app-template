@@ -14,6 +14,10 @@ class TodoListView extends View {
       buttonToggleAll: '.toggle-all'
     });
 
+    this.bindEvents([
+      {event: 'click', element: this.ui.inputField, handler: () => {}}
+    ]);
+
     console.log(this.ui);
   }
 }
