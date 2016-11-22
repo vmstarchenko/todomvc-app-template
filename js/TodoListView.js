@@ -5,6 +5,7 @@ class TodoListView extends View {
   constructor(rootElement) {
     super();
 
+    // TODO: bind event after render
     this.findElements(rootElement, {
       buttonAll: '[href="#/"]',
       buttonActive: '[href="#/active"]',
@@ -15,6 +16,7 @@ class TodoListView extends View {
       buttonToggleAll: '.toggle-all'
     });
 
+    // TODO: "elementname" as string
     this.bindEvents([{
       event: 'keypress',
       element: this.ui.inputField,
@@ -29,7 +31,7 @@ class TodoListView extends View {
 
     let value = this.ui.inputField.value.trim();
     if (!value) return;
-    
+
     console.log('add new todo:', value);
     TodoView.create({title: value});
   }

@@ -2,10 +2,9 @@ import {EventEmitter} from "libs/FKM/EventEmitter";
 import {Router} from "FKM";
 import {TodoListModel} from 'TodoListModel';
 
-import {Model} from "FKM/Model.js";
+import {Model} from "FKM";
 import {M} from './.tmp/a.js';
 import {router, pathnamePrefix} from 'appRouter';
-// import { b } from './.tmp/b.js';
 
 (function(window) {
   'use strict';
@@ -24,7 +23,8 @@ import {router, pathnamePrefix} from 'appRouter';
   // // console.log(b.emit, M.emit);
 
   // let r1 = new Router([{
-  //   url: '/home/vladimir/xProgramming/hse-js/todomvc-app-template/index.html',
+  //   url:
+  //   '/home/vladimir/xProgramming/hse-js/todomvc-app-template/index.html',
   //   controller: function() { console.log('route'); }
   // }]);
 
