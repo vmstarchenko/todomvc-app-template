@@ -6,4 +6,4 @@ export {Controller} from './Controller';
 export {View} from './View';
 export {TemplatesStorage} from './TemplatesStorage';
 
-export {get} from './Tools';
+export {tools} from './Tools';

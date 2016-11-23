@@ -1,9 +1,9 @@
 import {Model, fieldsS} from 'FKM';
 
 class TodoListModel extends Model {
-  constructor(fields) {
-    super();
-    this[fieldsS].array = [];
+  constructor(fields, id) {
+    super(fields, id);
+    this[fieldsS].todos = [];
   }
   static get _fields() {
     return {
@@ -12,8 +12,8 @@ class TodoListModel extends Model {
   }
 
   push(value) {
-    this[fieldsS].array.push(value);
-    TodoListModel.emit('model:changed', {field: 'array', value: value});
+    this[fieldsS].todos.push(value);
+    TodoListModel.emit('model:changed', {field: 'todos', value: value});
   }
 }
 

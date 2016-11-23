@@ -17,7 +17,7 @@ module.exports = {
     aggregateTimeout: 200
   },
 
-  devtool: NODE_ENV == 'development' ? "source-map" : null,
+  devtool: 'source-map',
 
   plugins: [
     new webpack.DefinePlugin({

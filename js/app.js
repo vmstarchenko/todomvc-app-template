@@ -1,6 +1,6 @@
+
 // import {EventEmitter} from "libs/FKM/EventEmitter";
 // import {Router} from "FKM";
-// import {TodoListModel} from 'TodoListModel';
 
 // import {Model} from "FKM";
 import {TodoListModel} from 'models';
@@ -9,9 +9,15 @@ import {router, pathnamePrefix} from 'appRouter';
 (function(window) {
   'use strict';
 
+
+
+  let firstList = new TodoListModel({}, 0);
+  firstList.commit();
+
   router.navigate({pathname: pathnamePrefix + '/index.html'});
 
-  console.log(TodoListModel.getAll());
+  // TodoListModel.on('change-' + x0.id, function() { console.log('azaza'); });
+  // TodoListModel.emit('change-' + x0.id);
 
   // let a = function() { console.log(1); };
   // let b = function() { console.log(2); };

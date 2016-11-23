@@ -1,12 +1,16 @@
 import {View} from 'FKM';
-import {TodoView} from 'views/TodoView';
+import {TodoView} from 'views';
+import {todoListTemplates} from 'templates/todoListTemplates';
+import {TodoListModel} from 'models';
 
 class TodoListView extends View {
   constructor(rootElement) {
-    super();
+    super(rootElement);
 
-    // TODO: bind event after render
-    this.findElements(rootElement, {
+    this.id = rootElement.id;
+    // this.model = TodoListModel.getById(this.id, false);
+
+    this.dElements = {
       buttonAll: '[href="#/"]',
       buttonActive: '[href="#/active"]',
       buttonCompleted: '[href="#/completed"]',
@@ -14,16 +18,27 @@ class TodoListView extends View {
       todosWrapper: '.main',
       inputField: '.new-todo',
       buttonToggleAll: '.toggle-all'
-    });
+    };
 
     // TODO: "elementname" as string
-    this.bindEvents([{
-      event: 'keypress',
-      element: this.ui.inputField,
-      handler: this.createNewTodo
-    }]);
+    this.dEvents = [
+      {event: 'keypress', element: 'inputField', handler: this.createNewTodo}
+    ];
 
-    console.log(this.ui);
+    this.template = todoListTemplates.get('todoList');
+  }
+
+  // create html and insert into dom
+  render() {
+    let html = this._render();
+    this.rootElement.innerHTML = html;
+    return this;
+  }
+
+  // create html
+  _render() {
+    let context = {id: this.id, subviews: {todos: []}};
+    return this.template(context);
   }
 
   createNewTodo(event) {

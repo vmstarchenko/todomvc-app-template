@@ -15,6 +15,7 @@ class ModelCache extends Object {
 function Model(fields, id) {
   // TODO: add check if call without new
   this.setAll(fields);
+
   Object.defineProperty(this, 'id', {
     configurable: false,
     enumerable: true,
@@ -106,8 +107,7 @@ Model.prototype.setAll = function(fields) {
  */
 Model.prototype.commit = function() {
   // TODO: check cache
-  let cls = this.constructor;
-  let storageId = `#${cls.name}#${this.id}`;
+  let storageId = `#${this.constructor[verboseNameS]}#${this.id}`;
   let obj = Object.assign({}, this[fieldsS]);
 
   this._storage[storageId] = JSON.stringify(obj);
@@ -138,18 +138,33 @@ Model.generateId = function() {
 /**
  *   Get object from storage or undefined if object with this id doesn't exists.
  *
+ * @param{Number|String} id
+ * @param{Boolean} wrap - if true wrap id to storage identifier
+ *   format (#verboseName#id)
+ *
  * @returns{Number|undefined}
  */
-Model.getById = function(id) {
+Model.getById = function(id, wrap = true) {
   // TODO: search in cache
-  let storageId = `#${this[verboseNameS]}#${id}`;
+  let storageId = id.toString();
   let storage = this.prototype._storage;
 
+  if (wrap) {
+    let storageId = `#${this[verboseNameS]}#${id}`;
+  } else {
+    let prefixLength = this[verboseNameS].length+2;
+    if (storageId.length <= prefixLength) return undefined;
+    id = parseInt(storageId.slice(prefixLength));
+  }
+
+  id = Number(id);
+  console.log(storage, storageId, id);
   let obj = JSON.parse(storage[storageId]);
-  if (obj === undefined) return undefined;
+  if (obj === undefined || isNaN(id)) return undefined;
 
   return new this(obj, id);
 };
+
 
 /**
  *   Get object from storage or undefined if object with this id doesn't exists.

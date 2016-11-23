@@ -17,11 +17,12 @@ class TemplatesStorage {
   /**
    * @constructs
    *
-   * @param{Object}[defaultContext={}] - variables that would be added to context
+   * @param{Object}[defaultContext={}] - variables that would be added to
+   * context
    *   of rendered templates.
    * @param{Object}[templates={}] - keys: templateName, value: Function renderer
    */
-  constructor(templates={}, defaultContext={}) {
+  constructor(templates = {}, defaultContext = {}) {
     // debugger;
     this.defaultContext = defaultContext;
     this.storage = templates;
@@ -39,10 +40,17 @@ class TemplatesStorage {
     let template = this.storage[templateName];
     if (!template)
       throw new Error(
-        `Template "${templateName}" doesn't exists in this storage.`
-      );
+          `Template "${templateName}" doesn't exists in this storage.`);
     context = Object.assign({}, this.defaultContext, context);
     return template(context);
+  }
+
+  get(templateName) {
+    let template = this.storage[templateName];
+    if (!template)
+      throw new Error(
+        `Template "${templateName}" doesn't exists in this storage.`);
+    return template;
   }
 
   /**
@@ -51,18 +59,14 @@ class TemplatesStorage {
    * @param{String} templateName - name of template
    * @param{Function} template - function renderer. Takes context argument
    */
-  addTemplate(templateName, template) {
-    this.storage[templateName] = template;
-  }
+  addTemplate(templateName, template) { this.storage[templateName] = template; }
 
   /**
    *   Remove template to storage.
    *
    * @param{String} templateName - name of template
    */
-  removeTemplate(templateName) {
-    delete this.storage[templateName];
-  }
+  removeTemplate(templateName) { delete this.storage[templateName]; }
 }
 
 /*************** Templates ***************
