@@ -11,7 +11,11 @@ class TodoView extends View {
 
     this.dRootAttributes = {id: id};
 
-    this.dElements = {};
+    this.dElements = {
+      buttonToggle: '.toggle',
+      buttonRemove: '.destroy',
+      changeTitleField: '.edit',
+    };
 
     // TODO: "elementname" as string
     this.dEvents = [];
