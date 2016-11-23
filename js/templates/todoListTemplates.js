@@ -1,8 +1,7 @@
 import {TemplatesStorage} from 'FKM';
 
 function _todoListTemplate(c) {
-  let html = `<section class="todoapp todolist" id="${c.id}">
-      <header class="header">
+  let html = `<header class="header">
         <input class="new-todo" placeholder="What needs to be done?" autofocus>
       </header>
       <section class="main">
@@ -10,7 +9,7 @@ function _todoListTemplate(c) {
         <label for="toggle-all">Mark all as complete</label>
         <ul class="todo-list">`;
   let todos = c.subviews.todos;
-  for (let i = 0, size = todos.length; i < size; ++i) {
+  for (let i in todos) {
     html += todos[i]._render(c);
   }
   html += `</ul>
@@ -29,17 +28,21 @@ function _todoListTemplate(c) {
           </li>
         </ul>
         <button class="clear-completed">Clear completed</button>
-      </footer>
-    </section>`;
+      </footer>`;
   return html;
 }
 
-function _todoTemplate(context) {
-  return 'dummy template';
+function _todoTemplate(c) {
+  let html = `<div class="view">
+		<input class="toggle" type="checkbox" checked>
+		<label>${c.title}</label>
+		<button class="destroy"></button>
+	</div>
+	<input class="edit" value="Create a TodoMVC template">`;
+  return html;
 }
 
-let todoListTemplates = new TemplatesStorage({
-  todoList: _todoListTemplate
-});
+let todoListTemplates =
+      new TemplatesStorage({todoList: _todoListTemplate, todo: _todoTemplate});
 
 export {todoListTemplates};

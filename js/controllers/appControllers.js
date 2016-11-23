@@ -12,7 +12,6 @@ class TodoController extends Controller {
     for (let i = 0, size = todoListElements.length; i < size; ++i) {
       todoListView = new TodoListView(todoListElements[i]);
       this.todoListViews.push(todoListView);
-      todoListView.render().findElements().bindEvents();
     }
   }
 }

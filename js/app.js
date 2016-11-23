@@ -2,17 +2,15 @@
 // import {EventEmitter} from "libs/FKM/EventEmitter";
 // import {Router} from "FKM";
 
-// import {Model} from "FKM";
+import {fieldsS} from "FKM";
 import {TodoListModel} from 'models';
 import {router, pathnamePrefix} from 'appRouter';
 
 (function(window) {
   'use strict';
 
-
-
-  let firstList = new TodoListModel({}, 0);
-  firstList.commit();
+  // let firstList = new TodoListModel({}, 0);
+  // firstList.commit();
 
   router.navigate({pathname: pathnamePrefix + '/index.html'});
 

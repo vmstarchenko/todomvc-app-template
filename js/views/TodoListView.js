@@ -1,21 +1,24 @@
 import {View} from 'FKM';
 import {TodoView} from 'views';
-import {todoListTemplates} from 'templates/todoListTemplates';
+import {todoListTemplates} from 'templates';
 import {TodoListModel} from 'models';
 
 class TodoListView extends View {
   constructor(rootElement) {
     super(rootElement);
 
-    this.id = rootElement.id;
-    // this.model = TodoListModel.getById(this.id, false);
+    this.todoListModel = TodoListModel.getById(this.id, false);
+    this.template = todoListTemplates.get('todoList');
+    this.subviews.todos = [];
+
+    this.dRootAttributes = {id: this.id, classes: 'todoapp todolist'};
 
     this.dElements = {
       buttonAll: '[href="#/"]',
       buttonActive: '[href="#/active"]',
       buttonCompleted: '[href="#/completed"]',
       buttonClear: '.clear-completed',
-      todosWrapper: '.main',
+      todoList: '.todo-list',
       inputField: '.new-todo',
       buttonToggleAll: '.toggle-all'
     };
@@ -25,7 +28,13 @@ class TodoListView extends View {
       {event: 'keypress', element: 'inputField', handler: this.createNewTodo}
     ];
 
-    this.template = todoListTemplates.get('todoList');
+    this.render().init();
+
+    // handle subviews
+    let todos = this.todoListModel.todos;
+    for (let todoId in todos) {
+      this.addTodo(todos[todoId]);
+    }
   }
 
   // create html and insert into dom
@@ -37,7 +46,7 @@ class TodoListView extends View {
 
   // create html
   _render() {
-    let context = {id: this.id, subviews: {todos: []}};
+    let context = {id: this.id, subviews: {todos: this.subviews.todos}};
     return this.template(context);
   }
 
@@ -47,8 +56,22 @@ class TodoListView extends View {
     let value = this.ui.inputField.value.trim();
     if (!value) return;
 
-    console.log('add new todo:', value);
-    TodoView.create({title: value});
+    let todoObject = this.todoListModel.addTodo(value);
+    this.todoListModel.commit();
+    // console.log(JSON.parse(localStorage['#TodoList#0']));
+    // console.log(this.todoListModel);
+
+    this.addTodo(todoObject);
+  }
+
+  addTodo(todoObject) {
+    let todoRootElement = document.createElement('li');
+    console.log(todoObject.id);
+    let todoView = new TodoView(todoRootElement, this.todoListModel, todoObject.id);
+    this.subviews.todos.push(todoView);
+
+    // todoView.render().findElements().bindEvents();
+    this.ui.todoList.appendChild(todoRootElement);
   }
 }
 

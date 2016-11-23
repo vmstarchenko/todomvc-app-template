@@ -1,20 +1,28 @@
 import {View} from 'FKM';
-import {todoTemplates} from 'templates/todoTemplates';
+import {todoListTemplates} from 'templates';
 
 class TodoView extends View {
-  constructor(rootElement) {
-    super();
+  constructor(rootElement, model, id) {
+    super(rootElement);
+    this.id = id;
 
-    this.findElements(rootElement, {
-    });
+    this.todoListModel = model;
+    this.template = todoListTemplates.get('todo');
 
-    this.bindEvents([{
-    }]);
+    this.dRootAttributes = {id: id};
 
+    this.dElements = {};
+
+    // TODO: "elementname" as string
+    this.dEvents = [];
+
+    this.render().init();
   }
 
-  static create(object) {
-    todoTemplates.render('create', object);
+  _render() {
+    let context = Object.assign({}, this.todoListModel.todos[this.id]);
+
+    return this.template(context);
   }
 }
 

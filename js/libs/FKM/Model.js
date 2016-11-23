@@ -16,6 +16,12 @@ function Model(fields, id) {
   // TODO: add check if call without new
   this.setAll(fields);
 
+  let model = this.constructor;
+  for (let field in model._fields) {
+    if (fields.hasOwnProperty(field)) continue;
+    this[field] = model._fields[field](); // default constructor for fields
+  }
+
   Object.defineProperty(this, 'id', {
     configurable: false,
     enumerable: true,
@@ -152,7 +158,7 @@ Model.getById = function(id, wrap = true) {
   if (wrap) {
     let storageId = `#${this[verboseNameS]}#${id}`;
   } else {
-    let prefixLength = this[verboseNameS].length+2;
+    let prefixLength = this[verboseNameS].length + 2;
     if (storageId.length <= prefixLength) return undefined;
     id = parseInt(storageId.slice(prefixLength));
   }

@@ -1,21 +1,49 @@
-import {Model, fieldsS} from 'FKM';
+import {Model, fieldsS, verboseNameS} from 'FKM';
 
 class TodoListModel extends Model {
   constructor(fields, id) {
+    if (!(fields.show === 'All' || fields.show === "Active" ||
+          fields.show === "Completed"))
+      fields.show = 'All';
     super(fields, id);
-    this[fieldsS].todos = [];
+    this[fieldsS].todos = fields.todos || {};
   }
+
   static get _fields() {
     return {
-      show: String, // 'All|Active|Completed'
+      show: String,        // 'All|Active|Completed'
+      todoCounter: Number  // 0
     };
   }
 
-  push(value) {
-    this[fieldsS].todos.push(value);
-    TodoListModel.emit('model:changed', {field: 'todos', value: value});
+  addTodo(title) {
+    let todoCounter = this.todoCounter++;
+
+    let todoObject = {title: title, completed: false, id: todoCounter};
+
+    this[fieldsS].todos[todoCounter] = todoObject;
+    TodoListModel.emit(
+        `change#${this[verboseNameS]}#${this.id}`, {value: todoObject});
+    return todoObject;
+  }
+
+  get todos() {
+    return this[fieldsS].todos;
   }
 }
+
+
+// Object.defineProperty(TodoListModel.prototype, 'tmp', {
+//   get: function() { ; return this[fieldsS]['tmp']; },
+//   set: function(value) {
+//     // TODO: generate set event
+//     this[fieldsS]['tmp'] = value;
+//     return value;
+//   },
+//   enumerable: true,
+//   configurable: true
+// });
+
 
 Model.register(TodoListModel, "TodoList");
 
