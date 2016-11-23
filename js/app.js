@@ -3,13 +3,15 @@
 // import {TodoListModel} from 'TodoListModel';
 
 // import {Model} from "FKM";
-// import {M} from './.tmp/a.js';
+import {TodoListModel} from 'models';
 import {router, pathnamePrefix} from 'appRouter';
 
 (function(window) {
   'use strict';
 
   router.navigate({pathname: pathnamePrefix + '/index.html'});
+
+  console.log(TodoListModel.getAll());
 
   // let a = function() { console.log(1); };
   // let b = function() { console.log(2); };

@@ -151,6 +151,32 @@ Model.getById = function(id) {
   return new this(obj, id);
 };
 
+/**
+ *   Get object from storage or undefined if object with this id doesn't exists.
+ *
+ * @returns{Number|undefined}
+ */
+Model.getAll = function(id) {
+  // TODO: search in cache
+  let modelNamePrefix = `#${this[verboseNameS]}#`;
+  let objects = [];
+  let storage = this.prototype._storage;
+  let storageId;
+
+  for (let i = 0, size = storage.length; i < size; ++i) {
+    storageId = storage.key(i);
+    if (storageId.startsWith(modelNamePrefix)) continue;
+
+    console.log('st: ', storage[storageId], storageId);
+    let obj = JSON.parse(storage[storageId]);
+    if (obj === undefined) continue;
+
+    objects.push(new this(obj, id));
+  }
+
+  return objects;
+};
+
 Model.prototype.toString = function() {
   return JSON.stringify(JSON.stringify(this[fieldsS]));
 };
