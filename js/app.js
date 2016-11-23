@@ -9,8 +9,10 @@ import {router, pathnamePrefix} from 'appRouter';
 (function(window) {
   'use strict';
 
-  // let firstList = new TodoListModel({}, 0);
-  // firstList.commit();
+  if (!(TodoListModel.getById(0))) {
+    let firstList = new TodoListModel({}, 0);
+    firstList.commit();
+  }
 
   router.navigate({pathname: pathnamePrefix + '/index.html'});
 

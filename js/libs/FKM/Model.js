@@ -155,8 +155,9 @@ Model.getById = function(id, wrap = true) {
   let storageId = id.toString();
   let storage = this.prototype._storage;
 
+
   if (wrap) {
-    let storageId = `#${this[verboseNameS]}#${id}`;
+    storageId = `#${this[verboseNameS]}#${id}`;
   } else {
     let prefixLength = this[verboseNameS].length + 2;
     if (storageId.length <= prefixLength) return undefined;
@@ -164,8 +165,11 @@ Model.getById = function(id, wrap = true) {
   }
 
   id = Number(id);
-  console.log(storage, storageId, id);
-  let obj = JSON.parse(storage[storageId]);
+
+  let json = storage[storageId];
+  if (json === undefined) return undefined;
+
+  let obj = JSON.parse(json);
   if (obj === undefined || isNaN(id)) return undefined;
 
   return new this(obj, id);

@@ -38,7 +38,7 @@ function _todoTemplate(c) {
 		<label>${c.title}</label>
 		<button class="destroy"></button>
 	</div>
-	<input class="edit hidden" value="${c.title}">`;
+	<input class="edit" value="${c.title}">`;
   return html;
 }
 
