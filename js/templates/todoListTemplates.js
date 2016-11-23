@@ -38,7 +38,7 @@ function _todoTemplate(c) {
 		<label>${c.title}</label>
 		<button class="destroy"></button>
 	</div>
-	<input class="edit" value="Create a TodoMVC template">`;
+	<input class="edit hidden" value="${c.title}">`;
   return html;
 }
 

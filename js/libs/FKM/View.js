@@ -1,6 +1,9 @@
-function View(rootElement) {
+function View(rootElement, id) {
   this.rootElement = rootElement;
-  this.id = rootElement.id;
+  if (id !== undefined)
+    this.id = id;
+  else if (rootElement.id !== '')
+    this.id = rootElement.id;
 }
 
 View.prototype.ui = {};  // list of elements for working
@@ -65,7 +68,7 @@ View.prototype.bindEvents = function() {
   for (let i = 0, size = config.length; i < size; ++i) {
     ({event, element, handler, context = this} = config[i]);
     element = this.ui[element];
-    console.log(element);
+
     if (!(typeof event === 'string' || event instanceof String) ||
         !(element instanceof Element) || !(handler instanceof Function)) {
       throw new Error(
