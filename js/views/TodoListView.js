@@ -1,5 +1,5 @@
 import {View} from 'FKM';
-import {TodoView} from 'TodoView';
+import {TodoView} from 'views/TodoView';
 
 class TodoListView extends View {
   constructor(rootElement) {

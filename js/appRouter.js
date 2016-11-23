@@ -1,5 +1,5 @@
 import {Router, Url, Controller} from 'FKM';
-import {TodoController} from 'appControllers';
+import {TodoController} from 'controllers/appControllers';
 
 let pathnamePrefix = '/home/vladimir/xProgramming/hse-js/todomvc-app-template';
 

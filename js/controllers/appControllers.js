@@ -1,5 +1,5 @@
-import {TodoListModel} from 'TodoListModel';
-import {TodoListView} from 'TodoListView';
+import {TodoListModel} from 'models/TodoListModel';
+import {TodoListView} from 'views/TodoListView';
 import {Controller} from 'FKM';
 
 
