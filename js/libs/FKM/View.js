@@ -1,10 +1,21 @@
+import {EventEmitter} from './EventEmitter';
+
 function View(rootElement, id) {
+  (View.__proto__ || Object.getPrototypeOf(View)).call(this);
   this.rootElement = rootElement;
   if (id !== undefined)
     this.id = id;
   else if (rootElement.id !== '')
     this.id = rootElement.id;
 }
+
+View.prototype = Object.create(EventEmitter.prototype); // inheritance
+if (Object.setPrototypeOf)
+  Object.setPrototypeOf(View, EventEmitter);
+else
+  View.__proto__ = EventEmitter;
+
+View.constructor = View;
 
 View.prototype.ui = {};  // list of elements for working
 View.prototype.subviews = {};
