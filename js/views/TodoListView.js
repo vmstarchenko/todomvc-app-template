@@ -27,7 +27,8 @@ class TodoListView extends View {
     // TODO: "elementname" as string
     this.dEvents = [
       {event: 'keypress', element: 'inputField', handler: this.createNewTodo},
-      {event: 'change', element: 'buttonToggleAll', handler: this.toggleAll}
+      {event: 'change', element: 'buttonToggleAll', handler: this.toggleAll},
+      {event: 'click', element: 'buttonClear', handler: this.clearCompleted}
     ];
 
     this.render().init();
@@ -71,6 +72,8 @@ class TodoListView extends View {
     let todoView =
         new TodoView(todoRootElement, this.todoListModel, todoObject.id);
     todoView.on('destroy', this.removeTodo.bind(this, todoObject.id))
+        .on('destroy', this.checkCompleted.bind(this))
+        .on('destroy', this.countUncompleted.bind(this))
         .on('change', this.checkCompleted.bind(this))
         .on('change', this.countUncompleted.bind(this))
         .emit('change');
@@ -94,11 +97,15 @@ class TodoListView extends View {
 
   checkCompleted() {
     let todos = this.todoListModel.todos, allCompleted = true;
+    let todosIsEmpty = true;
     for (let id in todos) {
+      todosIsEmpty = false;
       if (todos[id].completed) continue;
       allCompleted = false;
       break;
     }
+    if (todosIsEmpty)
+      allCompleted = false;
 
     this.ui.buttonToggleAll.checked = allCompleted;
   }
@@ -110,6 +117,13 @@ class TodoListView extends View {
     }
 
     this.ui.todoCounter.innerHTML = counter;
+  }
+
+  clearCompleted() {
+    let todos = this.todoListModel.todos, views = this.subviews.todos;
+    for (let id in todos) {
+      if (todos[id].completed) views[id].destroy();
+    }
   }
 }
 
