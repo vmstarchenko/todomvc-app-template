@@ -9,7 +9,7 @@ class TodoListView extends View {
 
     this.todoListModel = TodoListModel.getById(this.id, false);
     this.template = todoListTemplates.get('todoList');
-    this.subviews.todos = [];
+    this.subviews.todos = {};
 
     this.dRootAttributes = {id: this.id, classes: 'todoapp todolist'};
 
@@ -68,10 +68,16 @@ class TodoListView extends View {
     let todoRootElement = document.createElement('li');
 
     let todoView = new TodoView(todoRootElement, this.todoListModel, todoObject.id);
-    this.subviews.todos.push(todoView);
+    todoView.on('destroy', this.removeTodo.bind(this, todoObject.id));
+
+    this.subviews.todos[todoView.id] = todoObject.id;
 
     // todoView.render().findElements().bindEvents();
     this.ui.todoList.appendChild(todoRootElement);
+  }
+
+  removeTodo(id) {
+    delete this.subviews.todos[id];
   }
 }
 

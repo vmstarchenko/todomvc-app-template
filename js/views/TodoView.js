@@ -26,8 +26,9 @@ class TodoView extends View {
     // TODO: "elementname" as string
     this.dEvents = [
       {event: 'change', element: 'buttonToggle', handler: this.toggleCompleted},
+      {event: 'click', element: 'buttonRemove', handler: this.destroy},
       {
-        event: 'click',  //
+        event: 'click',
         element: 'label',
         handler: this.showChangeTitleField
       },
@@ -82,6 +83,15 @@ class TodoView extends View {
       this.rootElement.classList.add('completed');
     else
       this.rootElement.classList.remove('completed');
+  }
+
+  destroy(event) {
+    console.log(event);
+    this.rootElement.remove();
+    delete this.todoListModel.todos[this.id];
+    this.todoListModel.commit();
+
+    this.emit('destroy');
   }
 }
 
