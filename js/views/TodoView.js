@@ -91,6 +91,14 @@ class TodoView extends View {
 
     this.emit('destroy');
   }
+
+  hide() {
+    this.rootElement.classList.add('hidden');
+  }
+
+  show() {
+    this.rootElement.classList.remove('hidden');
+  }
 }
 
 export {TodoView};

@@ -28,17 +28,29 @@ class TodoListView extends View {
     this.dEvents = [
       {event: 'keypress', element: 'inputField', handler: this.createNewTodo},
       {event: 'change', element: 'buttonToggleAll', handler: this.toggleAll},
-      {event: 'click', element: 'buttonClear', handler: this.clearCompleted}
+      {event: 'click', element: 'buttonClear', handler: this.clearCompleted},
+      {
+        event: 'click',
+        element: 'buttonAll',
+        handler: this.updateShowValue.bind(this, 'All')
+      },
+      {
+        event: 'click',
+        element: 'buttonActive',
+        handler: this.updateShowValue.bind(this, 'Active')
+      },
+      {
+        event: 'click',
+        element: 'buttonCompleted',
+        handler: this.updateShowValue.bind(this, 'Completed')
+      },
     ];
 
     this.render().init();
     this.checkCompleted();
+    this.createSubviews();
 
-    // handle subviews
-    let todos = this.todoListModel.todos;
-    for (let todoId in todos) {
-      this.addTodo(todos[todoId]);
-    }
+    this.updateShowValue(this.todoListModel.show);
   }
 
   // create html and insert into dom
@@ -50,7 +62,19 @@ class TodoListView extends View {
 
   // create html
   _render() {
-    let context = {id: this.id, subviews: {todos: this.subviews.todos}};
+    let todos = [];
+    let show = this.todoListModel.show;
+
+    if (show !== 'All') {
+      let allTodos = this.todoListModel.todos, views = this.subviews.todos,
+          showCompleted = (show === 'Completed') ? true : false;
+
+      for (let id in views) {
+        if (!(allTodos[id].completed ^ showCompleted)) todos.push(views[id]);
+      }
+    }
+
+    let context = {id: this.id, subviews: {todos: todos}, show: show};
     return this.template(context);
   }
 
@@ -80,6 +104,12 @@ class TodoListView extends View {
 
     this.subviews.todos[todoView.id] = todoView;
 
+    let show = this.todoListModel.show;
+    if (show === 'All' || !(todoObject.completed ^ show === 'Completed'))
+      todoView.show();
+    else
+      todoView.hide();
+
     this.ui.todoList.appendChild(todoRootElement);
   }
 
@@ -104,8 +134,7 @@ class TodoListView extends View {
       allCompleted = false;
       break;
     }
-    if (todosIsEmpty)
-      allCompleted = false;
+    if (todosIsEmpty) allCompleted = false;
 
     this.ui.buttonToggleAll.checked = allCompleted;
   }
@@ -124,6 +153,39 @@ class TodoListView extends View {
     for (let id in todos) {
       if (todos[id].completed) views[id].destroy();
     }
+  }
+
+  updateShowValue(value) {
+    this.todoListModel.show = value;
+    this.todoListModel.commit();
+
+    // select button
+    this.ui.buttonAll.classList.remove('selected');
+    this.ui.buttonActive.classList.remove('selected');
+    this.ui.buttonCompleted.classList.remove('selected');
+    let target = {
+      All: this.ui.buttonAll,
+      Active: this.ui.buttonActive,
+      Completed: this.ui.buttonCompleted,
+    }[value];
+
+    target.classList.add('selected');
+
+    let views = this.subviews.todos, todos = this.todoListModel.todos;
+    for (let id in views) {
+      if (value === 'All' || !(todos[id].completed ^ value === 'Completed'))
+        views[id].show();
+      else
+        views[id].hide();
+    }
+  }
+
+  createSubviews() {
+    let todos = this.todoListModel.todos;
+    for (let todoId in todos) {
+      this.addTodo(todos[todoId]);
+    }
+    return this;
   }
 }
 

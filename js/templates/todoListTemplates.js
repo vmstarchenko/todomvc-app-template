@@ -18,13 +18,13 @@ function _todoListTemplate(c) {
         <span class="todo-count"><strong>0</strong> item left</span>
         <ul class="filters">
           <li>
-            <a class="selected" href="#/">All</a>
+            <a ${c.show === 'All' ? 'class="selected"': ''} href="#/">All</a>
           </li>
           <li>
-            <a href="#/active">Active</a>
+            <a ${c.show === 'Active' ? 'class="selected"': ''} href="#/active">Active</a>
           </li>
           <li>
-            <a href="#/completed">Completed</a>
+            <a ${c.show === 'Completed' ? 'class="selected"': ''} href="#/completed">Completed</a>
           </li>
         </ul>
         <button class="clear-completed">Clear completed</button>
