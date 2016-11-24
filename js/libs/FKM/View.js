@@ -7,9 +7,14 @@ function View(rootElement, id) {
     this.id = id;
   else if (rootElement.id !== '')
     this.id = rootElement.id;
+
+  this.ui = {};  // list of elements for working
+  this.subviews = {};
 }
 
-View.prototype = Object.create(EventEmitter.prototype); // inheritance
+
+// inheritance
+View.prototype = Object.create(EventEmitter.prototype);
 if (Object.setPrototypeOf)
   Object.setPrototypeOf(View, EventEmitter);
 else
@@ -17,9 +22,9 @@ else
 
 View.constructor = View;
 
-View.prototype.ui = {};  // list of elements for working
-View.prototype.subviews = {};
-View.dRootAttributes = {};
+
+// default attributes
+View.prototype.dRootAttributes = {};
 View.prototype.dElements = {};
 View.prototype.dEvents = {};
 
@@ -33,10 +38,10 @@ View.prototype.setRootAttributes = function() {
   if (this.dRootAttributes.id)  // set id
     this.rootElement.id = this.dRootAttributes.id;
 
-  if (this.dRootAttributes.classes) {  // set classes
-    let classes = this.dRootAttributes.classes.split(' ');
-    for (let i = 0, size = classes.length; i < size; ++i) {
-      if (classes[i]) this.rootElement.classList.add(classes[i]);
+  if (this.dRootAttributes.class) {  // set class
+    let class_ = this.dRootAttributes.class.split(' ');
+    for (let i = 0, size = class_.length; i < size; ++i) {
+      if (class_[i]) this.rootElement.classList.add(class_[i]);
     }
   }
 

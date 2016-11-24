@@ -34,7 +34,7 @@ function _todoListTemplate(c) {
 
 function _todoTemplate(c) {
   let html = `<div class="view">
-		<input class="toggle" type="checkbox" checked>
+		<input class="toggle" type="checkbox" ${c.completed ? "checked" : ""}>
 		<label>${c.title}</label>
 		<button class="destroy"></button>
 	</div>
@@ -43,6 +43,6 @@ function _todoTemplate(c) {
 }
 
 let todoListTemplates =
-      new TemplatesStorage({todoList: _todoListTemplate, todo: _todoTemplate});
+    new TemplatesStorage({todoList: _todoListTemplate, todo: _todoTemplate});
 
 export {todoListTemplates};

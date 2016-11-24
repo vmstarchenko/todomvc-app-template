@@ -66,7 +66,7 @@ class TodoListView extends View {
 
   addTodo(todoObject) {
     let todoRootElement = document.createElement('li');
-    console.log(todoObject.id);
+
     let todoView = new TodoView(todoRootElement, this.todoListModel, todoObject.id);
     this.subviews.todos.push(todoView);
 

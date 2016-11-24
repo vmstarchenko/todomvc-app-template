@@ -7,9 +7,13 @@ class TodoView extends View {
     this.id = id;
 
     this.todoListModel = model;
+    this.todo = this.todoListModel.todos[this.id];
     this.template = todoListTemplates.get('todo');
 
-    this.dRootAttributes = {id: id};
+    this.dRootAttributes = {
+      id: id,
+      class: (this.todo.completed) ? 'completed' : ''
+    };
 
     this.dElements = {
       buttonToggle: '.toggle',
@@ -21,7 +25,13 @@ class TodoView extends View {
 
     // TODO: "elementname" as string
     this.dEvents = [
-      {event: 'click', element: 'label', handler: this.showChangeTitleField}, {
+      {event: 'change', element: 'buttonToggle', handler: this.toggleCompleted},
+      {
+        event: 'click',  //
+        element: 'label',
+        handler: this.showChangeTitleField
+      },
+      {
         event: 'blur',
         element: 'changeTitleField',
         handler: this.saveTitleChanges
@@ -37,7 +47,7 @@ class TodoView extends View {
   }
 
   _render() {
-    let context = Object.assign({}, this.todoListModel.todos[this.id]);
+    let context = Object.assign({}, this.todo);
 
     return this.template(context);
   }
@@ -52,12 +62,26 @@ class TodoView extends View {
     if (event.type === 'keypress' && event.key !== 'Enter') return;
 
     let value = this.ui.changeTitleField.value;
-    this.todoListModel.todos[this.id].title = value;
+    this.todo.title = value;
     this.todoListModel.commit();
 
     this.ui.changeTitleField.style.display = 'none';
     this.ui.view.style.display = 'block';
     this.render().init();
+  }
+
+  toggleCompleted(event) {
+    console.log(this.ui.buttonToggle);
+    let checked = this.ui.buttonToggle.checked;
+
+    this.todo.completed = checked;
+    this.todoListModel.commit();
+    this.dRootAttributes.class = (checked) ? ' completed' : '';
+
+    if (checked)
+      this.rootElement.classList.add('completed');
+    else
+      this.rootElement.classList.remove('completed');
   }
 }
 
