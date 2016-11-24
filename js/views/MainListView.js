@@ -1,24 +1,28 @@
 import {View} from 'FKM';
 import {TodoListModel} from 'models';
 import {TodoListView} from 'views';
+import {todoListTemplates} from 'templates';
 
 class MainListView extends View {
   constructor(rootElement) {
     super(rootElement);
 
     this.subviews.todoLists = {};
+    this.template = todoListTemplates.get('mainList');
 
-    this.dElements = {
-      buttonAdd: '.add',
-      listWrapper: '.list-wrapper'
-    };
+    this.dElements = {buttonAdd: '.add', listWrapper: '.list-wrapper'};
 
     this.dEvents = [
       {event: 'click', element: 'buttonAdd', handler: this.createNewTodoList},
     ];
 
-    this.init();
+    this.render().init();
     this.createSubviews();
+  }
+
+  _render() {
+    let context = {id: this.id, subviews: {lists: this.subviews.todoLists}};
+    return this.template(context);
   }
 
   createNewTodoList(event) {
@@ -32,7 +36,8 @@ class MainListView extends View {
     let todoListRootElement = document.createElement('section');
 
     let todoListView = new TodoListView(todoListRootElement, todoListObject.id);
-    todoListView.on('destroy', this.removeTodoList.bind(this, todoListObject.id));
+    todoListView.on(
+        'destroy', this.removeTodoList.bind(this, todoListObject.id));
 
     this.subviews.todoLists[todoListObject.id] = todoListView;
     this.ui.listWrapper.appendChild(todoListRootElement);
@@ -49,7 +54,6 @@ class MainListView extends View {
   popTodoList() {
     if (!this.ui.listWrapper.lastChild) return;
     // let id = this.ui.listWrapper.lastChild.id;  // TODO: rm from storage
-    
   }
 
   removeTodoList(id) { delete this.subviews.todoLists[id]; }

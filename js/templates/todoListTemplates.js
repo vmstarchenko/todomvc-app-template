@@ -33,6 +33,18 @@ function _todoListTemplate(c) {
   return html;
 }
 
+
+function _mainListTemplate(c) {
+  let html = `<div class="list-wrapper">`;
+  let lists = c.subviews.lists;
+  for (let i in lists) {
+    html += lists[i]._render(c);
+  }
+  html += `</div>
+      <center><button class="add">+</button></center>`;
+  return html;
+}
+
 function _todoTemplate(c) {
   let html = `<div class="view">
     <input class="toggle" type="checkbox" ${c.completed ? "checked" : ""}>
@@ -43,7 +55,10 @@ function _todoTemplate(c) {
   return html;
 }
 
-let todoListTemplates =
-      new TemplatesStorage({todoList: _todoListTemplate, todo: _todoTemplate});
+let todoListTemplates = new TemplatesStorage({
+  todoList: _todoListTemplate,
+  todo: _todoTemplate,
+  mainList: _mainListTemplate
+});
 
 export {todoListTemplates};
