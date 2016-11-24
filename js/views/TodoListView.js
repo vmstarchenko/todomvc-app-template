@@ -4,14 +4,17 @@ import {todoListTemplates} from 'templates';
 import {TodoListModel} from 'models';
 
 class TodoListView extends View {
-  constructor(rootElement) {
+  constructor(rootElement, id) {
     super(rootElement);
 
-    this.todoListModel = TodoListModel.getById(this.id, false);
+    this.todoListModel = TodoListModel.getById(id);
     this.template = todoListTemplates.get('todoList');
     this.subviews.todos = {};
 
-    this.dRootAttributes = {id: this.id, classes: 'todoapp todolist'};
+    this.dRootAttributes = {
+      id: this.todoListModel.wrappedId,
+      class: 'todoapp todolist'
+    };
 
     this.dElements = {
       buttonAll: '[href="#/"]',

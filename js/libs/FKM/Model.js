@@ -19,7 +19,7 @@ function Model(fields, id) {
   let model = this.constructor;
   for (let field in model._fields) {
     if (fields.hasOwnProperty(field)) continue;
-    this[field] = model._fields[field](); // default constructor for fields
+    this[field] = model._fields[field]();  // default constructor for fields
   }
 
   Object.defineProperty(this, 'id', {
@@ -66,6 +66,12 @@ Model.register = function(model, verboseName) {
   model.generateId();
   model[verboseNameS] = verboseName;
 
+  Object.defineProperty(model.prototype, 'wrappedId', {
+    get: function() { return `#${this.constructor[verboseNameS]}#${this.id}`; },
+    configurable: false,
+    enumerable: true,
+  });
+
   wrapModelByEmitter(model);
 
   for (let field in model._fields) {
@@ -74,6 +80,8 @@ Model.register = function(model, verboseName) {
       throw new Error(
           `ValueError: can't register model "${verboseName}". ` +
           `Field "${field}" is not a constructor`);
+
+    // TODO: create getter, setter
 
     // TODO: check if redefine attributes
     Object.defineProperty(model.prototype, field, {
@@ -152,21 +160,20 @@ Model.generateId = function() {
  */
 Model.getById = function(id, wrap = true) {
   // TODO: search in cache
-  let storageId = id.toString();
+  let wrappedId = id.toString();
   let storage = this.prototype._storage;
 
-
   if (wrap) {
-    storageId = `#${this[verboseNameS]}#${id}`;
+    wrappedId = `#${this[verboseNameS]}#${id}`;
   } else {
     let prefixLength = this[verboseNameS].length + 2;
-    if (storageId.length <= prefixLength) return undefined;
-    id = parseInt(storageId.slice(prefixLength));
+    if (wrappedId.length <= prefixLength) return undefined;
+    id = parseInt(wrappedId.slice(prefixLength));
   }
 
   id = Number(id);
 
-  let json = storage[storageId];
+  let json = storage[wrappedId];
   if (json === undefined) return undefined;
 
   let obj = JSON.parse(json);
@@ -181,22 +188,22 @@ Model.getById = function(id, wrap = true) {
  *
  * @returns{Number|undefined}
  */
-Model.getAll = function(id) {
+Model.getAll = function() {
   // TODO: search in cache
   let modelNamePrefix = `#${this[verboseNameS]}#`;
+  let prefixLength = modelNamePrefix.length;
   let objects = [];
   let storage = this.prototype._storage;
-  let storageId;
+  let wrappedId;
 
   for (let i = 0, size = storage.length; i < size; ++i) {
-    storageId = storage.key(i);
-    if (storageId.startsWith(modelNamePrefix)) continue;
+    wrappedId = storage.key(i);
+    if (!wrappedId.startsWith(modelNamePrefix)) continue;
 
-    console.log('st: ', storage[storageId], storageId);
-    let obj = JSON.parse(storage[storageId]);
+    let obj = JSON.parse(storage[wrappedId]);
     if (obj === undefined) continue;
 
-    objects.push(new this(obj, id));
+    objects.push(new this(obj, parseInt(wrappedId.slice(prefixLength))));
   }
 
   return objects;

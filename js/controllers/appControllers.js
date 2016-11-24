@@ -1,18 +1,12 @@
-import {TodoListModel} from 'models';
 import {TodoListView} from 'views';
+import {MainListView} from 'views';
 import {Controller} from 'FKM';
 
 
 class TodoController extends Controller {
   activate() {
-    this.todoListViews = [];
-    let todoListElements = window.document.querySelectorAll('.todolist'),
-        todoListView;
-
-    for (let i = 0, size = todoListElements.length; i < size; ++i) {
-      todoListView = new TodoListView(todoListElements[i]);
-      this.todoListViews.push(todoListView);
-    }
+    let mainListElement = window.document.querySelector('.mainlist');
+    this.mainListView = new MainListView(mainListElement);
   }
 }
 
