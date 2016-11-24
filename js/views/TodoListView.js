@@ -8,6 +8,7 @@ class TodoListView extends View {
     super(rootElement);
 
     this.todoListModel = TodoListModel.getById(id);
+
     this.template = todoListTemplates.get('todoList');
     this.subviews.todos = {};
 

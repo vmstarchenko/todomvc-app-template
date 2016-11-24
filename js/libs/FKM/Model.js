@@ -14,6 +14,7 @@ class ModelCache extends Object {
 
 function Model(fields, id) {
   // TODO: add check if call without new
+  this[fieldsS] = {};
   this.setAll(fields);
 
   let model = this.constructor;
@@ -61,7 +62,6 @@ Model.register = function(model, verboseName) {
         errorMsg +
         `, verboseName not valid (got ${typeof verboseName} expected string)`);
 
-  model.prototype[fieldsS] = {};
   model.constructor[lastUsedIdS] = 0;
   model.generateId();
   model[verboseNameS] = verboseName;

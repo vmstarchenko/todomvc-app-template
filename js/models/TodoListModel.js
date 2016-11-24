@@ -6,6 +6,7 @@ class TodoListModel extends Model {
           fields.show === "Completed"))
       fields.show = 'All';
     super(fields, id);
+
     this[fieldsS].todos = fields.todos || {};
   }
 
@@ -21,15 +22,22 @@ class TodoListModel extends Model {
 
     let todoObject = {title: title, completed: false, id: todoCounter};
 
+    console.log(todoCounter);
     this[fieldsS].todos[todoCounter] = todoObject;
     TodoListModel.emit(
         `change#${this[verboseNameS]}#${this.id}`, {value: todoObject});
     return todoObject;
   }
 
-  get todos() {
-    return this[fieldsS].todos;
-  }
+  get todos() { return this[fieldsS].todos; }
+
+  // commit() {
+  //   console.log('id', this.id, this[fieldsS], this[fieldsS].todos);
+  //   let storageId = `#${this.constructor[verboseNameS]}#${this.id}`;
+  //   let obj = Object.assign({}, this[fieldsS]);
+
+  //   this._storage[storageId] = JSON.stringify(obj);
+  // }
 }
 
 
