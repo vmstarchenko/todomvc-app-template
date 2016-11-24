@@ -20,7 +20,8 @@ class TodoListView extends View {
       buttonClear: '.clear-completed',
       todoList: '.todo-list',
       inputField: '.new-todo',
-      buttonToggleAll: '.toggle-all'
+      buttonToggleAll: '.toggle-all',
+      todoCounter: '.todo-count strong'
     };
 
     // TODO: "elementname" as string
@@ -69,8 +70,10 @@ class TodoListView extends View {
 
     let todoView =
         new TodoView(todoRootElement, this.todoListModel, todoObject.id);
-    todoView.on('destroy', this.removeTodo.bind(this, todoObject.id));
-    todoView.on('change', this.checkCompleted.bind(this)).emit('change');
+    todoView.on('destroy', this.removeTodo.bind(this, todoObject.id))
+        .on('change', this.checkCompleted.bind(this))
+        .on('change', this.countUncompleted.bind(this))
+        .emit('change');
 
     this.subviews.todos[todoView.id] = todoView;
 
@@ -98,6 +101,15 @@ class TodoListView extends View {
     }
 
     this.ui.buttonToggleAll.checked = allCompleted;
+  }
+
+  countUncompleted() {
+    let todos = this.todoListModel.todos, counter = 0;
+    for (let id in todos) {
+      if (!(todos[id].completed)) ++counter;
+    }
+
+    this.ui.todoCounter.innerHTML = counter;
   }
 }
 
