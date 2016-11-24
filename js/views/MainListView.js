@@ -6,17 +6,15 @@ class MainListView extends View {
   constructor(rootElement) {
     super(rootElement);
 
-    this.subviews.todoLists = [];
+    this.subviews.todoLists = {};
 
     this.dElements = {
       buttonAdd: '.add',
-      buttonRemove: '.remove',
       listWrapper: '.list-wrapper'
     };
 
     this.dEvents = [
       {event: 'click', element: 'buttonAdd', handler: this.createNewTodoList},
-      {event: 'click', element: 'buttonRemove', handler: this.popTodoList}
     ];
 
     this.init();
@@ -33,10 +31,10 @@ class MainListView extends View {
   addTodoList(todoListObject) {
     let todoListRootElement = document.createElement('section');
 
-    let todoListView =
-          new TodoListView(todoListRootElement, todoListObject.id);
+    let todoListView = new TodoListView(todoListRootElement, todoListObject.id);
+    todoListView.on('destroy', this.removeTodoList.bind(this, todoListObject.id));
 
-    this.subviews.todoLists.push(todoListView);
+    this.subviews.todoLists[todoListObject.id] = todoListView;
     this.ui.listWrapper.appendChild(todoListRootElement);
   }
 
@@ -49,10 +47,12 @@ class MainListView extends View {
   }
 
   popTodoList() {
-    if (this.ui.listWrapper.lastChild) {
-      this.ui.listWrapper.lastChild.remove(); // TODO: rm from storage
-    }
+    if (!this.ui.listWrapper.lastChild) return;
+    // let id = this.ui.listWrapper.lastChild.id;  // TODO: rm from storage
+    
   }
+
+  removeTodoList(id) { delete this.subviews.todoLists[id]; }
 }
 
 export {MainListView};

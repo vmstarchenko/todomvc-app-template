@@ -3,6 +3,7 @@ import {TemplatesStorage} from 'FKM';
 function _todoListTemplate(c) {
   let html = `<header class="header">
         <input class="new-todo" placeholder="What needs to be done?" autofocus>
+        <button class="destroy-todolist">X</button>
       </header>
       <section class="main">
         <input class="toggle-all" type="checkbox">
@@ -34,15 +35,15 @@ function _todoListTemplate(c) {
 
 function _todoTemplate(c) {
   let html = `<div class="view">
-		<input class="toggle" type="checkbox" ${c.completed ? "checked" : ""}>
-		<label>${c.title}</label>
-		<button class="destroy"></button>
-	</div>
-	<input class="edit" value="${c.title}">`;
+    <input class="toggle" type="checkbox" ${c.completed ? "checked" : ""}>
+    <label>${c.title}</label>
+    <button class="destroy"></button>
+   </div>
+   <input class="edit" value="${c.title}">`;
   return html;
 }
 
 let todoListTemplates =
-    new TemplatesStorage({todoList: _todoListTemplate, todo: _todoTemplate});
+      new TemplatesStorage({todoList: _todoListTemplate, todo: _todoTemplate});
 
 export {todoListTemplates};

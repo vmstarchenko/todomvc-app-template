@@ -97,6 +97,9 @@ Model.register = function(model, verboseName) {
   }
 };
 
+Model.prototype.delete = function(){
+  delete this._storage[this.wrappedId];
+};
 
 /**
  *   Set all attributes. Call change event one time.
@@ -147,6 +150,7 @@ Model.generateId = function() {
 
   return id;
 };
+
 
 
 /**

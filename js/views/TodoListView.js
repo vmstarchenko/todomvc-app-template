@@ -18,18 +18,20 @@ class TodoListView extends View {
     };
 
     this.dElements = {
-      buttonAll: '[href="#/"]',
       buttonActive: '[href="#/active"]',
-      buttonCompleted: '[href="#/completed"]',
+      buttonAll: '[href="#/"]',
       buttonClear: '.clear-completed',
-      todoList: '.todo-list',
-      inputField: '.new-todo',
+      buttonCompleted: '[href="#/completed"]',
+      buttonDestroy: '.destroy-todolist',
       buttonToggleAll: '.toggle-all',
-      todoCounter: '.todo-count strong'
+      inputField: '.new-todo',
+      todoCounter: '.todo-count strong',
+      todoList: '.todo-list',
     };
 
     // TODO: "elementname" as string
     this.dEvents = [
+      {event: 'click', element: 'buttonDestroy', handler: this.destroy},
       {event: 'keypress', element: 'inputField', handler: this.createNewTodo},
       {event: 'change', element: 'buttonToggleAll', handler: this.toggleAll},
       {
@@ -204,6 +206,12 @@ class TodoListView extends View {
       this.addTodo(todos[todoId]);
     }
     return this;
+  }
+
+  destroy(event) {
+    this.rootElement.remove();
+    this.todoListModel.delete();
+    this.emit('destroy');
   }
 }
 
