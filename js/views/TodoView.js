@@ -27,12 +27,7 @@ class TodoView extends View {
     this.dEvents = [
       {event: 'change', element: 'buttonToggle', handler: this.toggleCompleted},
       {event: 'click', element: 'buttonRemove', handler: this.destroy},
-      {
-        event: 'click',
-        element: 'label',
-        handler: this.showChangeTitleField
-      },
-      {
+      {event: 'click', element: 'label', handler: this.showChangeTitleField}, {
         event: 'blur',
         element: 'changeTitleField',
         handler: this.saveTitleChanges
@@ -71,22 +66,25 @@ class TodoView extends View {
     this.render().init();
   }
 
-  toggleCompleted(event) {
-    console.log(this.ui.buttonToggle);
+  setCompleteStatus(status) { this.ui.buttonToggle.checked = Boolean(status); }
+
+  toggleCompleted(commit = true) {
     let checked = this.ui.buttonToggle.checked;
 
     this.todo.completed = checked;
-    this.todoListModel.commit();
+    if (commit) this.todoListModel.commit();
+
     this.dRootAttributes.class = (checked) ? ' completed' : '';
 
     if (checked)
       this.rootElement.classList.add('completed');
     else
       this.rootElement.classList.remove('completed');
+
+    this.emit('change');
   }
 
   destroy(event) {
-    console.log(event);
     this.rootElement.remove();
     delete this.todoListModel.todos[this.id];
     this.todoListModel.commit();

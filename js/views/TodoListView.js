@@ -25,10 +25,12 @@ class TodoListView extends View {
 
     // TODO: "elementname" as string
     this.dEvents = [
-      {event: 'keypress', element: 'inputField', handler: this.createNewTodo}
+      {event: 'keypress', element: 'inputField', handler: this.createNewTodo},
+      {event: 'change', element: 'buttonToggleAll', handler: this.toggleAll}
     ];
 
     this.render().init();
+    this.checkCompleted();
 
     // handle subviews
     let todos = this.todoListModel.todos;
@@ -58,8 +60,6 @@ class TodoListView extends View {
 
     let todoObject = this.todoListModel.addTodo(value);
     this.todoListModel.commit();
-    // console.log(JSON.parse(localStorage['#TodoList#0']));
-    // console.log(this.todoListModel);
 
     this.addTodo(todoObject);
   }
@@ -67,17 +67,37 @@ class TodoListView extends View {
   addTodo(todoObject) {
     let todoRootElement = document.createElement('li');
 
-    let todoView = new TodoView(todoRootElement, this.todoListModel, todoObject.id);
+    let todoView =
+        new TodoView(todoRootElement, this.todoListModel, todoObject.id);
     todoView.on('destroy', this.removeTodo.bind(this, todoObject.id));
+    todoView.on('change', this.checkCompleted.bind(this)).emit('change');
 
-    this.subviews.todos[todoView.id] = todoObject.id;
+    this.subviews.todos[todoView.id] = todoView;
 
-    // todoView.render().findElements().bindEvents();
     this.ui.todoList.appendChild(todoRootElement);
   }
 
-  removeTodo(id) {
-    delete this.subviews.todos[id];
+  removeTodo(id) { delete this.subviews.todos[id]; }
+
+  toggleAll() {
+    let checked = this.ui.buttonToggleAll.checked, todos = this.subviews.todos;
+
+    for (let todo in todos) {
+      todos[todo].setCompleteStatus(checked);
+      todos[todo].toggleCompleted(false);
+    }
+    this.todoListModel.commit();
+  }
+
+  checkCompleted() {
+    let todos = this.todoListModel.todos, allCompleted = true;
+    for (let id in todos) {
+      if (todos[id].completed) continue;
+      allCompleted = false;
+      break;
+    }
+
+    this.ui.buttonToggleAll.checked = allCompleted;
   }
 }
 
