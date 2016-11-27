@@ -80,7 +80,7 @@ class Url {
 }
 
 /**
-* Copy undefined parameters from source
+ * Copy undefined parameters from source
  * @param{Url} url - base url
  */
 Url.extend = function(url, urlConfig = {}) {

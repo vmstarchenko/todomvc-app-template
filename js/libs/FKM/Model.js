@@ -20,7 +20,7 @@ function Model(fields, id) {
   let model = this.constructor;
   for (let field in model._fields) {
     if (fields.hasOwnProperty(field)) continue;
-    this[field] = model._fields[field]();  // default constructor for fields
+    this[fieldsS][field] = model._fields[field]();  // default constructor for fields
   }
 
   Object.defineProperty(this, 'id', {
